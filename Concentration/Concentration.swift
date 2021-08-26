@@ -9,7 +9,14 @@ import Foundation
 
 class Concentration {
     
+    var flipCount = 0
+    var score = 0 {
+        didSet{
+            if score < 0 {score = 0}
+        }
+    }
     var cards = [Card]()
+    var mismatchedCards = [Card]()
     
     var indexOfOneAndOnlyFaceUpCard: Int?
     
@@ -20,9 +27,20 @@ class Concentration {
                 if cards[matchIndex].identidier == cards[index].identidier {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
+                    score += 2
                 }
+                //check for mismatched cards, each mismatch results in a additive penalty of -1 each time a card is involved in a mismatch
+                for card in mismatchedCards {
+                    if cards[index].identidier == card.identidier && !cards[index].isMatched {
+                            score -= 1
+                        }
+                    }
                 cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpCard = nil
+                if !cards[index].isMatched{//cards mismatched
+                    mismatchedCards.append(cards[index])
+                }
+                flipCount += 1
             } else {
                 //either no cards or two cars are face up
                 for flipDownIndex in cards.indices {

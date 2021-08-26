@@ -11,16 +11,15 @@ class ViewController: UIViewController {
 
     lazy var game: Concentration = Concentration(numberOfPairOfCards: (cardButtons.count + 1) / 2)
     
-    var flipCount = 0 {
-        didSet{
-            flipCountLabel.text = "Flips: \(flipCount)"
-        }
-    }
     
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var flipCountLabel: UILabel!
     
     @IBAction func newGame() {
-        flipCount = 0
+        game.flipCount = 0
+        game.score = 0
+        flipCountLabel.text = "Flips: \(game.flipCount)"
+        scoreLabel.text = "Score: \(game.score)"
         emoji.removeAll()
         randomThemeIndex = Int(arc4random_uniform(UInt32(emojiChoicesStore.count)))
         emojiChoices = emojiChoicesStore[randomThemeIndex]
@@ -32,9 +31,10 @@ class ViewController: UIViewController {
     @IBOutlet var cardButtons: [UIButton]!
         
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber = cardButtons.firstIndex(of: sender){
             game.chooseCard(at: cardNumber)
+            flipCountLabel.text = "Flips: \(game.flipCount)"
+            scoreLabel.text = "Score: \(game.score)"
             updateViewFromModel()
         } else {
             print("chosen card was not in cardButtons.")
@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game.cards[index]
-            
             if card.isFaceUp {
                 button.setTitle(emoji(for: card), for: .normal)
                 button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -63,7 +62,8 @@ class ViewController: UIViewController {
         ["🏴‍☠️","🏁","🏳️‍🌈","🇦🇷","🇦🇹","🇺🇸","🇬🇧","🇱🇻","🇵🇪","🇸🇦","🇸🇴"],
         ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","❤️‍🩹"],
         ["🍎","🍋","🍌","🥥","🥝","🌽","🫐","🥭","🍑","🍒"],
-        ["🌕","🌖","🌗","🌘","🌑","🌒","🌓","🌔","🌚","🌝"], ["🦥","🦦","🦫","🐿","🦔","🦝","🦡","🦨","🐇","🦘"]
+        ["🌕","🌖","🌗","🌘","🌑","🌒","🌓","🌔","🌚","🌝"],
+        ["🦥","🦦","🦫","🐿","🦔","🦝","🦡","🦨","🐇","🦘"]
     ]
     
     lazy var randomThemeIndex = Int(arc4random_uniform(UInt32(emojiChoicesStore.count)))
