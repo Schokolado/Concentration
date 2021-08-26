@@ -19,6 +19,16 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var flipCountLabel: UILabel!
     
+    @IBAction func newGame() {
+        flipCount = 0
+        emoji.removeAll()
+        randomThemeIndex = Int(arc4random_uniform(UInt32(emojiChoicesStore.count)))
+        emojiChoices = emojiChoicesStore[randomThemeIndex]
+        game = Concentration(numberOfPairOfCards: (cardButtons.count + 1) / 2)
+        updateViewFromModel()
+        
+    }
+    
     @IBOutlet var cardButtons: [UIButton]!
         
     @IBAction func touchCard(_ sender: UIButton) {
@@ -46,16 +56,19 @@ class ViewController: UIViewController {
         }
     }
     
-    func flipCard(withEmoji emoji: String, on button: UIButton){
-        if button.currentTitle == emoji {
-
-        } else {
-
-        }
-    }
     var emoji = [Int:String]()
     
-    var emojiChoices = ["🙀","👻","🎃","👹","😈","🕷","🔪","🪓","⚰️","💉","🩸","🦠","☣️"]
+    var emojiChoicesStore = [
+        ["🙀","👻","🎃","👹","😈","🕷","🔪","🪓","⚰️","💉","🩸","🦠","☣️"],
+        ["🏴‍☠️","🏁","🏳️‍🌈","🇦🇷","🇦🇹","🇺🇸","🇬🇧","🇱🇻","🇵🇪","🇸🇦","🇸🇴"],
+        ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","❤️‍🩹"],
+        ["🍎","🍋","🍌","🥥","🥝","🌽","🫐","🥭","🍑","🍒"],
+        ["🌕","🌖","🌗","🌘","🌑","🌒","🌓","🌔","🌚","🌝"], ["🦥","🦦","🦫","🐿","🦔","🦝","🦡","🦨","🐇","🦘"]
+    ]
+    
+    lazy var randomThemeIndex = Int(arc4random_uniform(UInt32(emojiChoicesStore.count)))
+    
+    lazy var emojiChoices = emojiChoicesStore[randomThemeIndex]
     
     func emoji(for card: Card) -> String{
         if emoji[card.identidier] == nil, emojiChoices.count > 0 {
